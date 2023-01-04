@@ -3,9 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
-
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -22,6 +20,9 @@ public class DriveTrain extends SubsystemBase {
   protected WPI_TalonFX m_FrontRightMotor;
   protected XboxController joystick;
   protected PIDController pid;
+  protected MotorControllerGroup MBackGroup; 
+  protected MotorControllerGroup MFrontGroup;
+  protected DifferentialDrive differentialDrive;
 
   public DriveTrain() {
     // setting up values
@@ -29,38 +30,38 @@ public class DriveTrain extends SubsystemBase {
     this.m_BackRightMotor = new WPI_TalonFX(Constants.k_back_right_motor);
     this.m_FrontLeftMotor = new WPI_TalonFX(Constants.k_front_left_motor);
     this.m_FrontRightMotor = new WPI_TalonFX(Constants.k_front_right_motor);
-
+    // move joystick
     this.joystick = new XboxController(Constants.k_joystick_port);
     // for later..
     this.pid = new PIDController(Constants.k_p, Constants.k_i, Constants.k_d);
     // making each speedController follow each other
     this.m_BackLeftMotor.follow(this.m_FrontLeftMotor);
     this.m_BackRightMotor.follow(this.m_FrontRightMotor);
+    // grouping the motors for comfort
+    this.MBackGroup = new MotorControllerGroup(m_BackLeftMotor, m_BackRightMotor);
+    this.MFrontGroup = new MotorControllerGroup(m_FrontLeftMotor, m_FrontRightMotor);
+    // creating a diffrential drive driving module
+    this.differentialDrive = new DifferentialDrive(MBackGroup, MFrontGroup);
   }
-
-  // grouping the motors for comfort
-  MotorControllerGroup MBackGroup = new MotorControllerGroup(m_BackLeftMotor, m_BackRightMotor);
-  MotorControllerGroup MFrontGroup = new MotorControllerGroup(m_FrontLeftMotor, m_FrontRightMotor);
-
-  DifferentialDrive differentialDrive = new DifferentialDrive(MBackGroup, MFrontGroup);
 
   public void MoveRobot() {
     // arcade drive
     float move = (float) joystick.getLeftX();
-    float rot = (float) joystick.getLeftY() * -1;
-    if (move < 0.05)
+    float rot = (float) joystick.getLeftY();
+    if (Math.abs(move) < 0.05)
       move = 0;
-    if (rot < 0.05)
+    if (Math.abs(rot) < 0.05)
       rot = 0;
     // switching between arcade and tank drive modules
     if (joystick.getAButton()) {
       String current = "";
-      Constants.count++;
-      if (Constants.count % 2 == 0) {current = "arcade";}
+      if (Constants.WhichDrive) {Constants.WhichDrive = false;}
+      else if (!Constants.WhichDrive) {Constants.WhichDrive = true;}
+      if (Constants.WhichDrive) {current = "arcade";}
       else {current = "tank";}  
       System.out.println("swiched! \ncurrent driving module: " + current);
     }
-    if (Constants.count % 2 == 0)
+    if (Constants.WhichDrive)
       differentialDrive.arcadeDrive(move, rot); // arcade drive
     else {
       // tank drive

@@ -28,7 +28,7 @@ public final class Constants {
 
 
     // service
-    public static int count = 0; 
+    public static boolean WhichDrive = false; 
 
 
 }
