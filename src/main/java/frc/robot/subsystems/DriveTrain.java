@@ -54,11 +54,8 @@ public class DriveTrain extends SubsystemBase {
       rot = 0;
     // switching between arcade and tank drive modules
     if (joystick.getAButton()) {
-      String current = "";
-      if (Constants.WhichDrive) {Constants.WhichDrive = false;}
-      else if (!Constants.WhichDrive) {Constants.WhichDrive = true;}
-      if (Constants.WhichDrive) {current = "arcade";}
-      else {current = "tank";}  
+      Constants.WhichDrive = !Constants.WhichDrive;
+      String current = (Constants.WhichDrive) ? "arcade" : "tank"; 
       System.out.println("swiched! \ncurrent driving module: " + current);
     }
     if (Constants.WhichDrive)
