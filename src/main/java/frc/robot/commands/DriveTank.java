@@ -5,13 +5,15 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.RobotContainer;
+import frc.robot.subsystems.DriveTrain;
 
-public class Driver extends CommandBase {
-  /** Creates a new drive. */
-  public Driver() {
+public class DriveTank extends CommandBase {
+  /** Creates a new DriveTank. */
+  private DriveTrain driveTrain = new DriveTrain();
+
+  public DriveTank() {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(RobotContainer.driveTrain);
+    addRequirements(this.driveTrain);
   }
 
   // Called when the command is initially scheduled.
@@ -21,13 +23,14 @@ public class Driver extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // making the robot go vroom
-    RobotContainer.driveTrain.MoveRobot();
+    this.driveTrain.driveTank();
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    System.out.println("current driving module: arcade".toUpperCase());
+  }
 
   // Returns true when the command should end.
   @Override

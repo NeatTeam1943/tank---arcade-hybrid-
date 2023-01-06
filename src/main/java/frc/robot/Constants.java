@@ -12,25 +12,21 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    // motor controller 
-    public static final int k_back_left_motor = 1;
-    public static final int k_back_right_motor = 2;
-    public static final int k_front_left_motor = 3;
-    public static final int k_front_right_motor = 4;
+    // Motor controller 
+    public static final int kBackLeftMotor = 1;
+    public static final int kBackRightMotor = 2;
+    public static final int kFrontLeftMotor = 3;
+    public static final int kFrontRightMotor = 4;
 
-    // joystick
-    public static final int k_joystick_port = 0;
+    // Joystick
+    public static final int kJoystickPort = 0;
 
-    // pid
-    public static final float k_p = 0.2f; 
-    public static final float k_i = 0.0f; 
-    public static final float k_d = 0.5f; 
+    // Pid
+    public static final float kP = 0.2f; 
+    public static final float kI = 0.0f; 
+    public static final float kD = 0.5f; 
 
-
-    // service
-    public static boolean WhichDrive = false; 
-
-
+    // Button info
+    public static final int kAButton = 1;
+    public static final int kBButton = 2;
 }
-
-    
