@@ -14,61 +14,53 @@ import frc.robot.Constants;
 public class DriveTrain extends SubsystemBase {
   /** Creates a new DriveTrain. */
   // calling up values
-  protected WPI_TalonFX m_BackLeftMotor;
-  protected WPI_TalonFX m_BackRightMotor;
-  protected WPI_TalonFX m_FrontLeftMotor;
-  protected WPI_TalonFX m_FrontRightMotor;
+  protected WPI_TalonFX backLeftMotor;
+  protected WPI_TalonFX backRightMotor;
+  protected WPI_TalonFX frontLeftMotor;
+  protected WPI_TalonFX frontRightMotor;
   protected XboxController joystick;
   protected PIDController pid;
-  protected MotorControllerGroup MBackGroup; 
-  protected MotorControllerGroup MFrontGroup;
+  protected MotorControllerGroup backGroup; 
+  protected MotorControllerGroup leftGroup;
   protected DifferentialDrive differentialDrive;
 
   public DriveTrain() {
-    // setting up values
-    this.m_BackLeftMotor = new WPI_TalonFX(Constants.k_back_left_motor);
-    this.m_BackRightMotor = new WPI_TalonFX(Constants.k_back_right_motor);
-    this.m_FrontLeftMotor = new WPI_TalonFX(Constants.k_front_left_motor);
-    this.m_FrontRightMotor = new WPI_TalonFX(Constants.k_front_right_motor);
-    // move joystick
-    this.joystick = new XboxController(Constants.k_joystick_port);
-    // for later..
-    this.pid = new PIDController(Constants.k_p, Constants.k_i, Constants.k_d);
-    // making each speedController follow each other
-    this.m_BackLeftMotor.follow(this.m_FrontLeftMotor);
-    this.m_BackRightMotor.follow(this.m_FrontRightMotor);
-    // grouping the motors for comfort
-    this.MBackGroup = new MotorControllerGroup(m_BackLeftMotor, m_BackRightMotor);
-    this.MFrontGroup = new MotorControllerGroup(m_FrontLeftMotor, m_FrontRightMotor);
-    // creating a diffrential drive driving module
-    this.differentialDrive = new DifferentialDrive(MBackGroup, MFrontGroup);
+    // Initializing motor controllers according to CAN ids
+    this.backLeftMotor = new WPI_TalonFX(Constants.kBackLeftMotor);
+    this.backRightMotor = new WPI_TalonFX(Constants.kBackRightMotor);
+    this.frontLeftMotor = new WPI_TalonFX(Constants.kFrontLeftMotor);
+    this.frontRightMotor = new WPI_TalonFX(Constants.kFrontRightMotor);
+    // Move joystick
+    this.joystick = new XboxController(Constants.kJoystickPort);
+    // In a couple of days this object will be used. Now it's redundant 
+    this.pid = new PIDController(Constants.kP, Constants.kI, Constants.kD);
+    // Making each speedController follow each other
+    this.backLeftMotor.follow(this.frontLeftMotor);
+    this.backRightMotor.follow(this.frontRightMotor);
+    // Grouping the motors for comfort
+    this.backGroup = new MotorControllerGroup(backLeftMotor, backRightMotor);
+    this.leftGroup = new MotorControllerGroup(frontLeftMotor, frontRightMotor);
+    // Creating a diffrential drive driving module
+    this.differentialDrive = new DifferentialDrive(backGroup, leftGroup);
   }
 
-  public void MoveRobot() {
-    // arcade drive
+  public void driveArcade() {
+    // Arcade drive
     float move = (float) joystick.getLeftX();
     float rot = (float) joystick.getLeftY();
     if (Math.abs(move) < 0.05)
       move = 0;
     if (Math.abs(rot) < 0.05)
       rot = 0;
-    // switching between arcade and tank drive modules
-    if (joystick.getAButton()) {
-      Constants.WhichDrive = !Constants.WhichDrive;
-      String current = (Constants.WhichDrive) ? "arcade" : "tank"; 
-      System.out.println("swiched! \ncurrent driving module: " + current);
-    }
-    if (Constants.WhichDrive)
-      differentialDrive.arcadeDrive(move, rot); // arcade drive
-    else {
-      // tank drive
+      differentialDrive.arcadeDrive(move, rot); // Arcade drive
+  }
+
+  public void driveTank(){
+      // Tank drive
       float leftSpeed = (float) joystick.getLeftY();
       float rightSpeed = (float) joystick.getRightY();
       differentialDrive.tankDrive(leftSpeed, rightSpeed);
-    }
-
   }
-
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
