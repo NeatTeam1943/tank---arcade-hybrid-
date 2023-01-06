@@ -1,7 +1,6 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
 /**
@@ -12,4 +11,22 @@ package frc.robot;
  * <p>It is advised to statically import this class (or one of its inner classes) wherever the
  * constants are needed, to reduce verbosity.
  */
-public final class Constants {}
+public final class Constants {
+    // Motor controller 
+    public static final int kBackLeftMotor = 1;
+    public static final int kBackRightMotor = 2;
+    public static final int kFrontLeftMotor = 3;
+    public static final int kFrontRightMotor = 4;
+
+    // Joystick
+    public static final int kJoystickPort = 0;
+
+    // Pid
+    public static final float kP = 0.2f; 
+    public static final float kI = 0.0f; 
+    public static final float kD = 0.5f; 
+
+    // Button info
+    public static final int kAButton = 1;
+    public static final int kBButton = 2;
+}
